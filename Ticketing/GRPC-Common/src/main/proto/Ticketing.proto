@@ -1,0 +1,99 @@
+syntax = "proto3";
+
+package main.proto;
+
+import "google/protobuf/empty.proto";
+
+option java_multiple_files = true;
+option java_package = "io.gRPC.Ticketing";
+option java_outer_classname = "TicketingProto";
+option objc_class_prefix = "gRPC";
+
+option csharp_namespace = "Ticketing.Proto";
+
+message User{
+  int64 Id = 1;
+  string Username = 2;
+  string Password = 3;
+}
+message Match{
+  enum Type{
+    GROUPS = 0;
+    SIXTEENTHS = 1;
+    EIGHTEENTHS = 2;
+    QUARTERS = 3;
+    SEMIFINALS = 4;
+    FINALS = 5;
+  }
+  int64 Id = 1;
+  string TeamA = 2;
+  string TeamB = 3;
+  double PriceTicket = 4;
+  int64 NumberOfSeats = 5;
+  Type MatchType = 6;
+}
+
+message Ticket{
+  int64 Id = 1;
+  Match match = 2;
+  string FirstName = 3;
+  string LastName = 4;
+  string Address = 5;
+  int64 NumberOfSeats = 6;
+}
+
+message LoginRequest{
+  User user = 1;
+}
+
+message LoginResponse{
+  bool success = 1;
+  string message = 2;
+  User user = 3;
+}
+
+message LogoutRequest{
+  User user = 1;
+}
+message LogoutResponse{
+  bool success = 1;
+  string message = 2;
+  User user = 3;
+}
+
+message SellTicketRequest{
+  Ticket ticket = 1;
+}
+
+message SellTicketResponse{
+  bool success = 1;
+  string message = 2;
+  Match match = 3;
+}
+
+message GetAllMatchesResponse{
+  repeated Match match = 1;
+}
+
+message FindByNameOrAddressRequest{
+  string last_name = 1;
+  string first_name = 2;
+  string address = 3;
+}
+
+message FindByNameOrAddressResponse{
+  repeated Ticket tickets = 1;
+}
+
+message UsernameRequest{
+  string username = 1;
+}
+service TicketingService{
+  rpc Login(LoginRequest) returns (LoginResponse);
+  rpc Logout(LogoutRequest) returns (LogoutResponse);
+  rpc SellTicket(SellTicketRequest) returns (SellTicketResponse);
+  rpc GetAllMatches(google.protobuf.Empty) returns (GetAllMatchesResponse);
+  rpc FindByNameOrAddress(FindByNameOrAddressRequest) returns (FindByNameOrAddressResponse);
+  // observer
+  rpc NotifyMatchUpdated(UsernameRequest) returns (stream Match);
+}

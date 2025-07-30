@@ -1,0 +1,24 @@
+plugins {
+    id 'java'
+}
+
+group = 'main'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    runtimeOnly group: 'org.xerial', name: 'sqlite-jdbc', version: '3.49.1.0'
+    implementation group: 'org.mindrot', name: 'jbcrypt', version: '0.4'
+    implementation 'org.apache.logging.log4j:log4j-api:2.24.3'
+    implementation 'org.apache.logging.log4j:log4j-core:2.24.3'
+    implementation project(':Models')
+}
+
+test {
+    useJUnitPlatform()
+}
